@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -23,11 +24,24 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    animLoad();
+    navigateTo();
+
+    // _updateState();
+    super.initState();
+  }
+
+  void animLoad() {
     Future.delayed(const Duration(milliseconds: 500), () {
       _updateState();
     });
-    // _updateState();
-    super.initState();
+  }
+
+// movie to login screen after 5 seconds
+  void navigateTo() {
+    Future.delayed(const Duration(milliseconds: 5000), () {
+      Navigator.pushNamed(context, LoginScreen.pageKey);
+    });
   }
 
   @override
