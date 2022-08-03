@@ -1,26 +1,60 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
+import 'package:logger/logger.dart';
+import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
 import 'package:online_book_store_app/widget/custom_text_field.dart';
 import 'package:online_book_store_app/widget/design_parts.dart';
 import 'package:online_book_store_app/widget/headings.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-  static String pageKey = '/login-screen';
+class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({Key? key}) : super(key: key);
+  static String pageKey = '/register-screen';
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _unLogin = TextEditingController();
-  final TextEditingController _pwLogin = TextEditingController();
+class _RegistrationScreenState extends State<RegistrationScreen> {
+  final TextEditingController _nameSign = TextEditingController();
+  final TextEditingController _mobileSign = TextEditingController();
+  final TextEditingController _unSign = TextEditingController();
+  final TextEditingController _pwSign = TextEditingController();
+
+  final FirebaseAuth mAuth = FirebaseAuth.instance;
   bool _pwVisibility = false;
+
+  bool _isValid() {
+    bool validationStatus = false;
+
+    if (_pwSign.text.isEmpty) {
+      Logger().w('Empty Password');
+      return false;
+    }
+    if (_unSign.text.isEmpty) {
+      Logger().w('Empty Username');
+        return false;
+    }
+    return validationStatus;
+  }
+
+  Future<void> _signinUser() async {
+    // print(
+    //     "Name:- ${_nameSign.text} mobile:- ${_mobileSign.text} un:- ${_unSign.text} pw:- ${_pwSign.text}");
+    try {
+      UserCredential userCredential = await mAuth.createUserWithEmailAndPassword(
+          email: _unSign.text, password: _pwSign.text);
+      if (userCredential.user!.uid != null) {
+        Logger().i('Registration success');
+      }
+    } catch (e) {
+      Logger().e(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -37,9 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 // top curved Container
                 FadeInDown(
-                    from: 200,
                     duration: const Duration(milliseconds: 2000),
-                    child: TopBanner(screenSize: screenSize)),
+                    child: TopBanner(
+                        screenSize: screenSize, heightMinimizingValue: 0.2)),
 
                 // bottom wave
                 FadeInUp(
@@ -51,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   left: screenSize.width * 0.11,
                   top: screenSize.height * 0.05,
                   child: Heading01(
-                    text: 'LOGIN',
+                    fontSize: 50,
+                    text: 'Registration',
                   ),
                 ),
 
@@ -60,18 +95,38 @@ class _LoginScreenState extends State<LoginScreen> {
                   right: screenSize.width * 0.11,
                   top: screenSize.height * 0.05,
                   child: const Icon(
-                    Icons.person,
-                    size: 100,
+                    Icons.person_add,
+                    size: 80,
                     color: Colors.white,
+                  ),
+                ),
+                Positioned(
+                  bottom: screenSize.height * 0.64,
+                  left: (screenSize.width - screenSize.width * 0.8) * 0.5,
+                  child: CustomTextField(
+                    screenSize: screenSize,
+                    controller: _nameSign,
+                    label: 'Name',
+                    prefixIcon: const Icon(Icons.person_add_outlined),
+                  ),
+                ),
+                Positioned(
+                  bottom: screenSize.height * 0.56,
+                  left: (screenSize.width - screenSize.width * 0.8) * 0.5,
+                  child: CustomTextField(
+                    screenSize: screenSize,
+                    controller: _mobileSign,
+                    label: 'Mobile',
+                    prefixIcon: const Icon(Icons.phone),
                   ),
                 ),
                 //center container
                 Positioned(
-                  bottom: screenSize.height * 0.5,
+                  bottom: screenSize.height * 0.48,
                   left: (screenSize.width - screenSize.width * 0.8) * 0.5,
                   child: CustomTextField(
                     screenSize: screenSize,
-                    controller: _unLogin,
+                    controller: _unSign,
                     label: 'Email',
                     prefixIcon: const Icon(Icons.email_outlined),
                   ),
@@ -79,12 +134,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // password field
                 Positioned(
-                  bottom: screenSize.height * 0.42,
+                  bottom: screenSize.height * 0.4,
                   left: (screenSize.width - screenSize.width * 0.8) * 0.5,
                   child: CustomTextField(
                     isObsecure: _pwVisibility,
                     screenSize: screenSize,
-                    controller: _pwLogin,
+                    controller: _pwSign,
                     label: 'Password',
                     prefixIcon: const Icon(Icons.security_sharp),
                     suffixIcon: IconButton(
@@ -102,37 +157,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 //Login button
                 Positioned(
-                  bottom: screenSize.height * 0.34,
+                  bottom: screenSize.height * 0.3,
                   left: (screenSize.width - screenSize.width * 0.69) * 0.5,
                   child: SizedBox(
                     width: screenSize.width * 0.69,
                     height: screenSize.height * 0.056,
                     child: CustomElevatedButton(
-                      text: 'Login',
-                      onTap: () {},
+                      text: 'Register',
+                      onTap: () {
+                        _signinUser();
+                      },
                     ),
                   ),
                 ),
 
                 //link to registration page
                 Positioned(
-                  bottom: screenSize.height * 0.23,
+                  bottom: screenSize.height * 0.2,
                   width: screenSize.width,
                   child: CustomTextButton(
-                    text: "haven't account? Register here",
+                    text: "Already have an account? Login here",
                     onTap: () {
-                      Navigator.pushNamed(context, RegistrationScreen.pageKey);
+                      Navigator.pushNamed(context, LoginScreen.pageKey);
                     },
-                  ),
-                ),
-
-                //link to reset password
-                Positioned(
-                  bottom: screenSize.height * 0.17,
-                  right: screenSize.width * 0.07,
-                  child: CustomTextButton(
-                    text: "Forgot Password",
-                    onTap: () {},
                   ),
                 ),
               ],
