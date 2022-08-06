@@ -32,8 +32,7 @@ class CustomElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: const Color(0xFF519259), //ConstantValues.primaryColor,
-        surfaceTintColor: ConstantValues.primaryColor,
+        primary: ConstantValues.secondryColor, //ConstantValues.primaryColor,
         animationDuration: const Duration(milliseconds: 3000),
         elevation: 10,
         shape: const RoundedRectangleBorder(

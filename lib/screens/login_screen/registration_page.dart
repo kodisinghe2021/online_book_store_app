@@ -1,8 +1,9 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
+import 'package:online_book_store_app/constant.dart';
+import 'package:online_book_store_app/utils/util_functions.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
 import 'package:online_book_store_app/widget/custom_text_field.dart';
 import 'package:online_book_store_app/widget/design_parts.dart';
@@ -16,41 +17,23 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+// get UtilFunctions
+  final UtilFunctions _utils = UtilFunctions();
+// loader controlling bool value
+  bool _isLoading = false;
+
   final TextEditingController _nameSign = TextEditingController();
   final TextEditingController _mobileSign = TextEditingController();
-  final TextEditingController _unSign = TextEditingController();
+  final TextEditingController _emailSign = TextEditingController();
   final TextEditingController _pwSign = TextEditingController();
 
-  final FirebaseAuth mAuth = FirebaseAuth.instance;
+  // final UtilFunctions _utils = UtilFunctions();
+  // final FirebaseAuth mAuth = FirebaseAuth.instance
+
+//fireStore instance
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   bool _pwVisibility = false;
-
-  bool _isValid() {
-    bool validationStatus = false;
-
-    if (_pwSign.text.isEmpty) {
-      Logger().w('Empty Password');
-      return false;
-    }
-    if (_unSign.text.isEmpty) {
-      Logger().w('Empty Username');
-        return false;
-    }
-    return validationStatus;
-  }
-
-  Future<void> _signinUser() async {
-    // print(
-    //     "Name:- ${_nameSign.text} mobile:- ${_mobileSign.text} un:- ${_unSign.text} pw:- ${_pwSign.text}");
-    try {
-      UserCredential userCredential = await mAuth.createUserWithEmailAndPassword(
-          email: _unSign.text, password: _pwSign.text);
-      if (userCredential.user!.uid != null) {
-        Logger().i('Registration success');
-      }
-    } catch (e) {
-      Logger().e(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +68,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   left: screenSize.width * 0.11,
                   top: screenSize.height * 0.05,
                   child: Heading01(
-                    fontSize: 50,
+                    fontSize: 40,
                     text: 'Registration',
                   ),
                 ),
@@ -126,7 +109,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   left: (screenSize.width - screenSize.width * 0.8) * 0.5,
                   child: CustomTextField(
                     screenSize: screenSize,
-                    controller: _unSign,
+                    controller: _emailSign,
                     label: 'Email',
                     prefixIcon: const Icon(Icons.email_outlined),
                   ),
@@ -137,7 +120,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   bottom: screenSize.height * 0.4,
                   left: (screenSize.width - screenSize.width * 0.8) * 0.5,
                   child: CustomTextField(
-                    isObsecure: _pwVisibility,
+                    isObsecure: !_pwVisibility,
                     screenSize: screenSize,
                     controller: _pwSign,
                     label: 'Password',
@@ -162,12 +145,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   child: SizedBox(
                     width: screenSize.width * 0.69,
                     height: screenSize.height * 0.056,
-                    child: CustomElevatedButton(
-                      text: 'Register',
-                      onTap: () {
-                        _signinUser();
-                      },
-                    ),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                                color: ConstantValues.secondryColor))
+                        : CustomElevatedButton(
+                            text: 'Register',
+                            onTap: () async {
+                              setState(() {
+                                _isLoading = true;
+                                Logger().w(
+                                    '~~~~~~~~~~~~~ Loadin Start .... _isLoading: $_isLoading ~~~~~~~~~~');
+                              });
+
+                              await _utils.validateAndSigninStoreUser(
+                                  context,
+                                  _nameSign.text,
+                                  _mobileSign.text,
+                                  _emailSign.text,
+                                  _pwSign.text);
+
+                              setState(() {
+                                _isLoading = false;
+                                Logger().w(
+                                    '~~~~~~~~~~~~~ Loadin End .... _isLoading: $_isLoading ~~~~~~~~~~');
+                              });
+                            },
+                          ),
                   ),
                 ),
 
@@ -178,7 +182,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   child: CustomTextButton(
                     text: "Already have an account? Login here",
                     onTap: () {
-                      Navigator.pushNamed(context, LoginScreen.pageKey);
+                      Navigator.pop(context);
                     },
                   ),
                 ),

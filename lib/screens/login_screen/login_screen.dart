@@ -1,10 +1,14 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:online_book_store_app/constant.dart';
+import 'package:online_book_store_app/provider/user_provider.dart';
+import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
 import 'package:online_book_store_app/widget/custom_text_field.dart';
 import 'package:online_book_store_app/widget/design_parts.dart';
 import 'package:online_book_store_app/widget/headings.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,13 +18,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _unLogin = TextEditingController();
-  final TextEditingController _pwLogin = TextEditingController();
+  final UserProvider _userProvider = UserProvider();
+
+  final TextEditingController _emailLogin = TextEditingController();
+  final TextEditingController _passwordLogin = TextEditingController();
+
   bool _pwVisibility = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final userData = Provider.of<UserProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -65,13 +75,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.white,
                   ),
                 ),
-                //center container
                 Positioned(
                   bottom: screenSize.height * 0.5,
                   left: (screenSize.width - screenSize.width * 0.8) * 0.5,
                   child: CustomTextField(
                     screenSize: screenSize,
-                    controller: _unLogin,
+                    controller: _emailLogin,
                     label: 'Email',
                     prefixIcon: const Icon(Icons.email_outlined),
                   ),
@@ -84,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: CustomTextField(
                     isObsecure: _pwVisibility,
                     screenSize: screenSize,
-                    controller: _pwLogin,
+                    controller: _passwordLogin,
                     label: 'Password',
                     prefixIcon: const Icon(Icons.security_sharp),
                     suffixIcon: IconButton(
@@ -107,10 +116,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SizedBox(
                     width: screenSize.width * 0.69,
                     height: screenSize.height * 0.056,
-                    child: CustomElevatedButton(
-                      text: 'Login',
-                      onTap: () {},
-                    ),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                                color: ConstantValues.secondryColor))
+                        : CustomElevatedButton(
+                            text: 'Login',
+                            onTap: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+
+                              await userData
+                                  .loginUser(context, _emailLogin.text,
+                                      _passwordLogin.text)
+                                  .then(
+                                    (value) => Navigator.popAndPushNamed(
+                                        context, ProductViewScreen.pageKey),
+                                  );
+
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            },
+                          ),
                   ),
                 ),
 
