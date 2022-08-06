@@ -5,6 +5,9 @@ import 'package:online_book_store_app/provider/user_provider.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
+import 'package:online_book_store_app/screens/menu_screens/custom_feedback_screen.dart';
+import 'package:online_book_store_app/screens/menu_screens/forum_screen.dart';
+import 'package:online_book_store_app/screens/menu_screens/profile_screen.dart';
 import 'package:online_book_store_app/screens/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +29,11 @@ class MyApp extends StatelessWidget {
         routes: {
           LoginScreen.pageKey: (context) => const LoginScreen(),
           RegistrationScreen.pageKey: (context) => const RegistrationScreen(),
-          ProductViewScreen.pageKey: (context) => ProductViewScreen(),
+          ProductViewScreen.pageKey: (context) => const ProductViewScreen(),
+          CustomFeedBackScreen.pageKey: (context) =>
+              const CustomFeedBackScreen(),
+          ProfileScreen.pageKey: (context) => const ProfileScreen(),
+          ForumScreen.pageKey: (context) => const ForumScreen(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -37,7 +44,7 @@ class MyApp extends StatelessWidget {
         //theme stup
         title: 'title',
         themeMode: ThemeMode.system,
-    
+
         home: const SplashScreen(),
       ),
     );
