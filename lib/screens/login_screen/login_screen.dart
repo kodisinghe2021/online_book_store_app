@@ -1,14 +1,14 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:online_book_store_app/constant.dart';
-import 'package:online_book_store_app/provider/user_provider.dart';
+import 'package:online_book_store_app/controllers/user_auth_controller.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
+import 'package:online_book_store_app/utils/alert_support.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
 import 'package:online_book_store_app/widget/custom_text_field.dart';
 import 'package:online_book_store_app/widget/design_parts.dart';
 import 'package:online_book_store_app/widget/headings.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,19 +18,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final UserProvider _userProvider = UserProvider();
-
   final TextEditingController _emailLogin = TextEditingController();
   final TextEditingController _passwordLogin = TextEditingController();
 
   bool _pwVisibility = false;
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final userData = Provider.of<UserProvider>(context);
-
+    final UserAuthController userAuthController = UserAuthController();
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -116,30 +113,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SizedBox(
                     width: screenSize.width * 0.69,
                     height: screenSize.height * 0.056,
-                    child: _isLoading
-                        ? const Center(
-                            child: CircularProgressIndicator(
-                                color: ConstantValues.secondryColor))
-                        : CustomElevatedButton(
-                            text: 'Login',
-                            onTap: () async {
-                              setState(() {
-                                _isLoading = true;
-                              });
-
-                              await userData
-                                  .loginUser(context, _emailLogin.text,
-                                      _passwordLogin.text)
-                                  .then(
-                                    (value) => Navigator.popAndPushNamed(
-                                        context, ProductViewScreen.pageKey),
-                                  );
-
-                              setState(() {
-                                _isLoading = false;
-                              });
-                            },
-                          ),
+                    child: CustomElevatedButton(
+                      text: 'Login',
+                      onTap: () async {
+                        if (_emailLogin.text.isNotEmpty &&
+                            _passwordLogin.text.isNotEmpty) {
+                          bool loginSuccess =
+                              await userAuthController.loginUser(
+                            context,
+                            _emailLogin.text,
+                            _passwordLogin.text,
+                          );
+                          if (loginSuccess) {
+                            Navigator.popAndPushNamed(
+                                context, ProductViewScreen.pageKey);
+                          }
+                        } else {
+                          AlertSupprt.showDialogBox(
+                              context,
+                              CoolAlertType.warning,
+                              'Empty Fields',
+                              'Fields Cannot be empty', () {
+                            Navigator.pop(context);
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
 
@@ -162,6 +161,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: CustomTextButton(
                     text: "Forgot Password",
                     onTap: () {},
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'NKSoftTech',
+                    style: TextStyle(
+                        fontSize: 15, color: Colors.black.withOpacity(0.5)),
                   ),
                 ),
               ],

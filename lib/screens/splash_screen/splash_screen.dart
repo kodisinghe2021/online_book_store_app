@@ -1,12 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:online_book_store_app/constant.dart';
-import 'package:online_book_store_app/provider/user_provider.dart';
+import 'package:online_book_store_app/controllers/user_auth_controller.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
-import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -16,24 +14,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  UserProvider _userProvider = UserProvider();
-
   @override
   void initState() {
-    navigateToStPage();
+    navigatToMatchPage();
     super.initState();
   }
 
-// movie to login screen after .. seconds
-  void navigateToStPage() {
-    Future.delayed(const Duration(milliseconds: 3500), () {
-      Logger().i('~~~~~~~~~~~~~~~~~~~~ listen Startt~~~~~~~~~~~~~~~~~~~');
-      Provider.of<UserProvider>(context, listen: false).userStatus(context);
-      Logger().i('~~~~~~~~~~~~~~~~~~~~ listen End   ~~~~~~~~~~~~~~~~~~~');
-      // isUserAlreaduLogged
-      //     ? Navigator.popAndPushNamed(context, LoginScreen.pageKey)
-      //     : Navigator.popAndPushNamed(context, ProductViewScreen.pageKey);
-    });
+  Future<void> navigatToMatchPage() async {
+    bool userAuthController = await UserAuthController().userStatus();
+    !userAuthController
+        ? Future.delayed(const Duration(seconds: 4), () {
+            Navigator.pushNamed(context, ProductViewScreen.pageKey);
+          })
+        : Future.delayed(const Duration(seconds: 4), () {
+            Navigator.pushNamed(context, LoginScreen.pageKey);
+          });
   }
 
   @override

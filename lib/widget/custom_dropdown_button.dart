@@ -3,18 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/models/menu_item_modal.dart';
 
-class CustomDropdownButton extends StatelessWidget {
+class CustomDropdownButton extends StatefulWidget {
   const CustomDropdownButton({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
+}
+
+class _CustomDropdownButtonState extends State<CustomDropdownButton> {
+  bool _isCLicked = false;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         customButton: const Icon(
-          Icons.list,
-          size: 46,
+          Icons.menu,
+          size: 30,
           color: Colors.white,
         ),
         customItemsIndexes: const [4],
@@ -40,6 +47,9 @@ class CustomDropdownButton extends StatelessWidget {
           ),
         ],
         onChanged: (value) {
+          setState(() {
+            _isCLicked = !_isCLicked;
+          });
           MenuItems.onChanged(context, value as MenuItemC);
         },
         itemHeight: 48,

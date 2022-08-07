@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_book_store_app/provider/user_provider.dart';
+import 'package:online_book_store_app/controllers/user_auth_controller.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/custom_feedback_screen.dart';
@@ -46,7 +46,7 @@ class MenuItems {
     );
   }
 
-  static onChanged(BuildContext context, MenuItemC item) {
+  static onChanged(BuildContext context, MenuItemC item) async {
     switch (item) {
       case MenuItems.home:
         Navigator.pushNamed(context, ProductViewScreen.pageKey);
@@ -61,7 +61,7 @@ class MenuItems {
         Navigator.pushNamed(context, CustomFeedBackScreen.pageKey);
         break;
       case MenuItems.logout:
-        Provider.of<UserProvider>(context, listen: false).logOutUser().then(
+        await UserAuthController().logOutUser().then(
               (value) =>
                   Navigator.popAndPushNamed(context, LoginScreen.pageKey),
             );

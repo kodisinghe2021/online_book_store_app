@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
-import 'package:online_book_store_app/provider/user_provider.dart';
+import 'package:online_book_store_app/provider/book_provider.dart';
+import 'package:online_book_store_app/screens/admin_panel/admin_dashboard.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
@@ -23,8 +24,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => UserProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => BooksProvider(),
+        ),
+      ],
+      // providers:[ChangeNotifierProvider( (context) => UserProvider()),],
       child: MaterialApp(
         routes: {
           LoginScreen.pageKey: (context) => const LoginScreen(),
@@ -34,6 +39,7 @@ class MyApp extends StatelessWidget {
               const CustomFeedBackScreen(),
           ProfileScreen.pageKey: (context) => const ProfileScreen(),
           ForumScreen.pageKey: (context) => const ForumScreen(),
+          AdminDashBoard.pageKey:(context) => AdminDashBoard(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
