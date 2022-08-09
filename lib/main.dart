@@ -2,13 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/provider/book_provider.dart';
-import 'package:online_book_store_app/screens/admin_panel/admin_dashboard.dart';
+import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
 import 'package:online_book_store_app/screens/menu_screens/custom_feedback_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/forum_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/profile_screen.dart';
+import 'package:online_book_store_app/screens/single_book_full_view/single_book_full_view.dart';
 import 'package:online_book_store_app/screens/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
               const CustomFeedBackScreen(),
           ProfileScreen.pageKey: (context) => const ProfileScreen(),
           ForumScreen.pageKey: (context) => const ForumScreen(),
-          AdminDashBoard.pageKey:(context) => AdminDashBoard(),
+         AdminDashBoard.pageKey:(context) => AdminDashBoard(),
+          SingleBookFullViewScreen.pageKey:(context) => SingleBookFullViewScreen(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

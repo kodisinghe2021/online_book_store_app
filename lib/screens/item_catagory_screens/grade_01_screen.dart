@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:online_book_store_app/models/book_modal.dart';
 import 'package:online_book_store_app/provider/book_provider.dart';
 import 'package:online_book_store_app/widget/single_book_template.dart';
 import 'package:provider/provider.dart';

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/provider/book_provider.dart';
+import 'package:online_book_store_app/screens/single_book_full_view/single_book_full_view.dart';
 import 'package:provider/provider.dart';
 
 class SingleBookItemTemplate extends StatelessWidget {
   const SingleBookItemTemplate({
     Key? key,
-  required this.index,
+    required this.index,
   }) : super(key: key);
   final index;
   @override
@@ -20,9 +21,14 @@ class SingleBookItemTemplate extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              bookData.getCurrentBookList[index].bookImageUrl,
-              fit: BoxFit.fill,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, SingleBookFullViewScreen.pageKey);
+              },
+              child: Image.network(
+                bookData.getCurrentBookList[index].bookImageUrl,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
         ),
@@ -55,7 +61,7 @@ class SingleBookItemTemplate extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(10),
           child: Text(
-             bookData.getCurrentBookList[index].bookname,
+            bookData.getCurrentBookList[index].bookname,
             style: const TextStyle(color: Colors.white),
           ),
         ),

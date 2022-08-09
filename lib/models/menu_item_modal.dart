@@ -5,7 +5,6 @@ import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/custom_feedback_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/forum_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/profile_screen.dart';
-import 'package:provider/provider.dart';
 
 class MenuItemC {
   final String text;

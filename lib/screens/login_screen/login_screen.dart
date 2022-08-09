@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/controllers/user_auth_controller.dart';
+import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
 import 'package:online_book_store_app/utils/alert_support.dart';
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordLogin = TextEditingController();
 
   bool _pwVisibility = false;
-  final bool _isLoading = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _pwVisibility = !_pwVisibility;
                         });
                       },
-                      icon: _pwVisibility
+                      icon: !_pwVisibility
                           ? const Icon(Icons.visibility)
                           : const Icon(Icons.visibility_off),
                     ),
@@ -113,32 +114,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SizedBox(
                     width: screenSize.width * 0.69,
                     height: screenSize.height * 0.056,
-                    child: CustomElevatedButton(
-                      text: 'Login',
-                      onTap: () async {
-                        if (_emailLogin.text.isNotEmpty &&
-                            _passwordLogin.text.isNotEmpty) {
-                          bool loginSuccess =
-                              await userAuthController.loginUser(
-                            context,
-                            _emailLogin.text,
-                            _passwordLogin.text,
-                          );
-                          if (loginSuccess) {
-                            Navigator.popAndPushNamed(
-                                context, ProductViewScreen.pageKey);
-                          }
-                        } else {
-                          AlertSupprt.showDialogBox(
-                              context,
-                              CoolAlertType.warning,
-                              'Empty Fields',
-                              'Fields Cannot be empty', () {
-                            Navigator.pop(context);
-                          });
-                        }
-                      },
-                    ),
+                    child: _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : CustomElevatedButton(
+                            text: 'Login',
+                            onTap: () async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              if (_emailLogin.text.isNotEmpty &&
+                                  _passwordLogin.text.isNotEmpty) {
+                                bool loginSuccess =
+                                    await userAuthController.loginUser(
+                                  context,
+                                  _emailLogin.text,
+                                  _passwordLogin.text,
+                                );
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                                if (loginSuccess) {
+                                  Navigator.popAndPushNamed(
+                                      context, ProductViewScreen.pageKey);
+                                }
+                              } else {
+                                AlertSupprt.showDialogBox(
+                                    context,
+                                    CoolAlertType.warning,
+                                    'Empty Fields',
+                                    'Fields Cannot be empty', () {
+                                  Navigator.pop(context);
+                                });
+                              }
+                            },
+                          ),
                   ),
                 ),
 
@@ -164,7 +173,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (_emailLogin.text == "fxkodisinghe@gmail.com") {
+                      bool isSuccess = await UserAuthController().loginUser(
+                          context, _emailLogin.text, _passwordLogin.text);
+                      if (isSuccess) {
+                        Navigator.pushNamed(context, AdminDashBoard.pageKey);
+                      }
+                    }
+                    {}
+                  },
                   child: Text(
                     'NKSoftTech',
                     style: TextStyle(

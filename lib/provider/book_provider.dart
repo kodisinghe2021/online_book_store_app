@@ -1,4 +1,11 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
+import 'package:online_book_store_app/controllers/book_controller.dart';
 import 'package:online_book_store_app/models/book_modal.dart';
 
 class BooksProvider with ChangeNotifier {
@@ -200,7 +207,6 @@ class BooksProvider with ChangeNotifier {
         rank: '4'),
   ];
 
-
   final List<BookModal> _bookListGradeThree = [
     BookModal(
         bookid: '1',
@@ -300,12 +306,7 @@ class BooksProvider with ChangeNotifier {
         rank: '4'),
   ];
 
-
-
-
-
-
-
+  final BookController _bookController = BookController();
 
   List<BookModal> get gradeOneBooks {
     return [..._bookListGradeOne];
@@ -315,7 +316,7 @@ class BooksProvider with ChangeNotifier {
     return [..._bookListGradeTwo];
   }
 
- List<BookModal> get gradeThreeBooks {
+  List<BookModal> get gradeThreeBooks {
     return [..._bookListGradeThree];
   }
 
@@ -332,4 +333,57 @@ class BooksProvider with ChangeNotifier {
   }
 //~~~~~~~~~~~~~~~~~~~~~~Set Currently active book list~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
+//~~~~~~~~~~~~~~~~~~~~~~Pick image ***** Admin Use Only ******~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+  final ImagePicker _picker = ImagePicker();
+
+  //asign empty path for file
+  File _image = File("");
+
+  File get getImage => _image;
+
+  //---------------------uploading function
+  Future<void> selectImageFromGalary() async {
+    try {
+      // Pick an image
+      final XFile? pickFile = await _picker.pickImage(
+          source: ImageSource.gallery); // check pickFile is empty or not
+      if (pickFile != null) {
+        //assign path for file
+        _image = File(pickFile.path);
+        Logger().i(
+            '~~~~~`Image Picked and save path in _image ~~~~~ Paht is: $_image');
+      } else {
+        Logger().w("File Not Selected");
+      }
+    } catch (e) {
+      Logger().e(e);
+    }
+    notifyListeners();
+  }
+
+  void clearPath() {
+    _image = File("");
+    Logger().i('~~~~~~~~~~~~~~~~~~~~~ path clear now path:  $_image');
+  }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Start save book information ~~~~~~~~~~~~~~~~~~~~~~~//
+
+  Future<void> saveBookInformation(
+    String bookname,
+    String bookDescription,
+    String price,
+    String catogory,
+    String publisher,
+    String grade,
+  ) async {
+    Logger().i(
+        '`````````````` inside provider startSaveBookInformation( method~~~~~~~~~~~~~~~~~~~~~~');
+    try {
+      await _bookController.startSaveBookInfo(
+          bookname, _image, bookDescription, price, catogory, publisher, grade);
+      Logger().i('Successfully saved~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+    } on FirebaseException catch (e) {
+      Logger().e('Error ${e.code}');
+    }
+    notifyListeners();
+  }
 }
