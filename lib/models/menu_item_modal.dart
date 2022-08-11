@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/controllers/user_auth_controller.dart';
+import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
 import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/custom_feedback_screen.dart';
-import 'package:online_book_store_app/screens/menu_screens/forum_screen.dart';
 import 'package:online_book_store_app/screens/menu_screens/profile_screen.dart';
 
 class MenuItemC {
@@ -17,13 +17,18 @@ class MenuItemC {
 }
 
 class MenuItems {
-  static const List<MenuItemC> firstItems = [home, profile, feedback, forum];
+  static const List<MenuItemC> firstItems = [home, profile, feedback, admin];
   static const List<MenuItemC> secondItems = [logout];
 
   static const home = MenuItemC(text: 'Products', icon: Icons.menu_book);
   static const profile = MenuItemC(text: 'Profile', icon: Icons.person);
   static const feedback = MenuItemC(text: 'Feedback', icon: Icons.feedback);
-  static const forum = MenuItemC(text: 'Forum', icon: Icons.forum);
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~ this line changed for teting perpous~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+  static const admin =
+      MenuItemC(text: 'Admin', icon: Icons.admin_panel_settings); //forum
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~ this line changed for teting perpous~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
   static const logout = MenuItemC(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItemC item) {
@@ -53,8 +58,8 @@ class MenuItems {
       case MenuItems.profile:
         Navigator.pushNamed(context, ProfileScreen.pageKey);
         break;
-      case MenuItems.forum:
-        Navigator.pushNamed(context, ForumScreen.pageKey);
+      case MenuItems.admin:
+        Navigator.pushNamed(context, AdminDashBoard.pageKey);
         break;
       case MenuItems.feedback:
         Navigator.pushNamed(context, CustomFeedBackScreen.pageKey);

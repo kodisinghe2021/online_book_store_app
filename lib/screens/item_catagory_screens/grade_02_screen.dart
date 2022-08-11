@@ -1,55 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:online_book_store_app/provider/book_provider.dart';
-import 'package:online_book_store_app/widget/single_book_template.dart';
-import 'package:provider/provider.dart';
+import 'package:online_book_store_app/widget/custom_future_builder.dart';
+import 'package:online_book_store_app/widget/enums.dart';
 
-class Grade02Screen extends StatelessWidget {
+class Grade02Screen extends StatefulWidget {
   const Grade02Screen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    //~~~~~~~~~ provider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-    final bookData = Provider.of<BooksProvider>(context);
-//~~~~~~~~~ provider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+  State<Grade02Screen> createState() => _Grade02ScreenState();
+}
 
+class _Grade02ScreenState extends State<Grade02Screen> {
+  @override
+  Widget build(BuildContext context) {
 //~~~~~~~~~ Screen Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     final screenSize = MediaQuery.of(context).size;
 //~~~~~~~~~ Screen Size ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          width: screenSize.width,
-          height: screenSize.height * 0.85,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            // color: Colors.black.withOpacity(0.5),
-          ),
-          child: Stack(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 2 / 3.3,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemCount: bookData.gradeTwoBooks.length,
-                    itemBuilder: (context, index) {
-                      Provider.of<BooksProvider>(context,listen: false)
-                          .setCurrentBookList(bookData.gradeTwoBooks);
-                      return SingleBookItemTemplate(index: index);
-                    }
-                    // SingleBookTemplate()
-                    //     .buildSingleBook(context, bookListGraddeOne, index),
-                    ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: CustomFutureBuilder(gradeEnum: EnumVariables.grade_02), //future bu,
     );
   }
 }

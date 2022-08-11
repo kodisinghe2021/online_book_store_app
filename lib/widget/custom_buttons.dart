@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
 
@@ -21,13 +20,15 @@ class CustomTextButton extends StatelessWidget {
 }
 
 class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton({
+  CustomElevatedButton({
     Key? key,
     required this.text,
     required this.onTap,
+    this.isLoading = false,
   }) : super(key: key);
   final String text;
   final VoidCallback onTap;
+  bool isLoading;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -42,10 +43,16 @@ class CustomElevatedButton extends StatelessWidget {
         ),
       ),
       onPressed: onTap,
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 20, color: Colors.white),
-      ),
+      child: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 5.5,
+            ))
+          : Text(
+              text,
+              style: const TextStyle(fontSize: 20, color: Colors.white),
+            ),
     );
   }
 }

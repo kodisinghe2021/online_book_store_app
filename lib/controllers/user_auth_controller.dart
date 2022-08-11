@@ -8,7 +8,8 @@ import 'package:online_book_store_app/utils/alert_support.dart';
 class UserAuthController {
   final FirebaseAuth _mAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
   String _uid = '';
   String _email = '';
   String _name = '';

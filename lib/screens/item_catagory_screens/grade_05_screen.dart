@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:online_book_store_app/widget/headings.dart';
+import 'package:online_book_store_app/widget/custom_future_builder.dart';
+import 'package:online_book_store_app/widget/enums.dart';
 
 class Grade05Screen extends StatelessWidget {
   const Grade05Screen({Key? key}) : super(key: key);
@@ -7,15 +8,7 @@ class Grade05Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          color: Colors.amber,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Heading01(text: 'Grade 05'),
-          ),
-        ),
-      ),
+      body: CustomFutureBuilder(gradeEnum: EnumVariables.grade_05), //future bu,
     );
   }
 }

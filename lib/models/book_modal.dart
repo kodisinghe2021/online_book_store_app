@@ -22,4 +22,19 @@ class BookModal {
     required this.publisher,
     required this.rank,
   });
+
+//~~~~~~~~~~~~~~ get json file to an json object ~~~~~~~~~~~~~~~~~~//
+
+  static BookModal fromJason(Map<String, dynamic> json) => BookModal(
+        bookid: json['bookid'] as String,
+        bookname: json['bookname'] as String,
+        price: json['price'] as String,
+        bookImageUrl: json['bookImageUrl'] as String,
+        bookDescription: json['bookDescription'] as String,
+        catogory: json['catogory'] as String,
+        favouriteScore: json['favouriteScore'] as String,
+        grade: json['grade'] as String,
+        publisher: json['publisher'] as String,
+        rank: json['rank'] as String,
+      );
 }

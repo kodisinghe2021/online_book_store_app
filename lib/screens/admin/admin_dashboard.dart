@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/controllers/book_controller.dart';
 import 'package:online_book_store_app/provider/book_provider.dart';
 import 'package:online_book_store_app/utils/util_functions.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
 import 'package:online_book_store_app/widget/custom_text_field.dart';
+import 'package:online_book_store_app/widget/enums.dart';
 import 'package:online_book_store_app/widget/headings.dart';
 import 'package:provider/provider.dart';
 
@@ -35,15 +37,24 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
   String bookImageUrl = '';
   String favouriteScore = '';
   String rank = '';
+// this field use for dropdown menu. select grade                      //
+  final _gradeList = [
+    EnumVariables.grade_01,
+    EnumVariables.grade_02,
+    EnumVariables.grade_03,
+    EnumVariables.grade_04,
+    EnumVariables.grade_05,
+  ];
 
-  // final UtilFunctions _utils = UtilFunctions();
-  // final FirebaseAuth mAuth = FirebaseAuth.instance
+  String? selectedGrade;
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~END~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 //fireStore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final bool _pwVisibility = false;
-
+  bool isLoader = false;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -85,57 +96,82 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                       SizedBox(height: screenSize.height * 0.15),
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Book Name ~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-                      CustomTextField(
+                      CustomSinhalaTextField(
                         screenSize: screenSize,
                         controller: _bookName,
                         label: 'Book Name',
                         prefixIcon: const Icon(Icons.person_add_outlined),
                       ),
                       SizedBox(height: screenSize.height * 0.01),
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~END~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Book Price ~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-                      CustomTextField(
+                      CustomSinhalaTextField(
                         screenSize: screenSize,
                         controller: _price,
                         label: 'Price',
                         prefixIcon: const Icon(Icons.phone),
                       ),
                       SizedBox(height: screenSize.height * 0.01),
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~END~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Description ~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-                      CustomTextField(
+                      CustomSinhalaTextField(
                         screenSize: screenSize,
                         controller: _description,
                         label: 'Discription',
                         prefixIcon: const Icon(Icons.email_outlined),
                       ),
                       SizedBox(height: screenSize.height * 0.01),
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~END~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Catogory ~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-                      CustomTextField(
+                      CustomSinhalaTextField(
                         screenSize: screenSize,
                         controller: _catogory,
                         label: 'Catogory',
                         prefixIcon: const Icon(Icons.person_add_outlined),
                       ),
                       SizedBox(height: screenSize.height * 0.01),
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~END~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Publisher ~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-                      CustomTextField(
+                      CustomSinhalaTextField(
                         screenSize: screenSize,
                         controller: _publisher,
                         label: 'Publisher',
                         prefixIcon: const Icon(Icons.phone),
                       ),
                       SizedBox(height: screenSize.height * 0.01),
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~END~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Grade ~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-                      //center container
-                      CustomTextField(
-                        screenSize: screenSize,
-                        controller: _grade,
-                        label: 'Grade',
-                        prefixIcon: const Icon(Icons.email_outlined),
+                      Container(
+                        width: screenSize.width * 0.8,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: ConstantValues.primaryColor, width: 1),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: const Icon(Icons.arrow_drop_down_rounded),
+                            isExpanded: true,
+                            value: selectedGrade,
+                            items: _gradeList.map(buildMenuItem).toList(),
+                            onChanged: (value) => setState(
+                              () {
+                                this.selectedGrade = value;
+                                Logger().w(value);
+                              },
+                            ),
+                          ),
+                        ),
                       ),
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~END~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
                     ],
                   ),
                 ),
@@ -174,10 +210,6 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                           Provider.of<BooksProvider>(context,
                                                   listen: false)
                                               .selectImageFromGalary();
-                                          Logger().i(
-                                              '~~~~~~~~~~~~~~~~~~~~Image selected~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-                                          Logger().i(
-                                              '~~~~~~~~~~~~~~~~~~~~_image : ${value.getImage}  ~~~~~~~~~~~~~~~~~~~~~~~~~');
                                         },
                                         child: const Text("Select Other Image"),
                                       ),
@@ -199,8 +231,12 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                     child: Consumer<BooksProvider>(
                       builder: (context, value, child) {
                         return CustomElevatedButton(
+                          isLoading: isLoader,
                           text: 'Upload Details',
                           onTap: () async {
+                            setState(() {
+                              isLoader = true;
+                            });
                             value
                                 .saveBookInformation(
                                   _bookName.text,
@@ -208,9 +244,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                                   _price.text,
                                   _catogory.text,
                                   _publisher.text,
-                                  _grade.text,
+                                  selectedGrade.toString(),
                                 )
-                                .then((value) => Logger().i('Upload succes'));
+                                .then((value) => afterUpload());
                           },
                         );
                       },
@@ -223,5 +259,15 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
         ),
       ),
     );
+  }
+
+  DropdownMenuItem<String> buildMenuItem(String itemT) =>
+      DropdownMenuItem(value: itemT, child: Text(itemT));
+
+  void afterUpload() {
+    setState(() {
+      isLoader = false;
+    });
+    Navigator.popAndPushNamed(context, AdminDashBoard.pageKey);
   }
 }
