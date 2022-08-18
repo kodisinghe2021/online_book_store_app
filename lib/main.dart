@@ -1,15 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
-import 'package:online_book_store_app/provider/book_provider.dart';
+import 'package:online_book_store_app/provider/book.dart';
+import 'package:online_book_store_app/provider/cart.dart';
+import 'package:online_book_store_app/provider/orders.dart';
 import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
-import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
-import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
-import 'package:online_book_store_app/screens/login_screen/registration_page.dart';
-import 'package:online_book_store_app/screens/menu_screens/custom_feedback_screen.dart';
-import 'package:online_book_store_app/screens/menu_screens/forum_screen.dart';
-import 'package:online_book_store_app/screens/menu_screens/profile_screen.dart';
-import 'package:online_book_store_app/screens/single_book_full_view/single_book_full_view.dart';
+import 'package:online_book_store_app/screens/cart/cart_screen.dart';
+import 'package:online_book_store_app/screens/home/product_view_screen.dart';
+import 'package:online_book_store_app/screens/login/login_screen.dart';
+import 'package:online_book_store_app/screens/login/registration_page.dart';
+import 'package:online_book_store_app/screens/menu/custom_feedback_screen.dart';
+import 'package:online_book_store_app/screens/menu/forum_screen.dart';
+import 'package:online_book_store_app/screens/menu/profile_screen.dart';
+import 'package:online_book_store_app/screens/book_view/single_book_full_view.dart';
+import 'package:online_book_store_app/screens/oreders/order_screen.dart';
 import 'package:online_book_store_app/screens/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +31,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => BooksProvider(),
-        ),
+        ChangeNotifierProvider(create: (context) => BooksProvider()),
+        ChangeNotifierProvider(create: (context) => CartItemProvider()),
+        ChangeNotifierProvider(create: (context) => OrderItemProvider()),
       ],
       // providers:[ChangeNotifierProvider( (context) => UserProvider()),],
       child: MaterialApp(
@@ -40,8 +45,11 @@ class MyApp extends StatelessWidget {
               const CustomFeedBackScreen(),
           ProfileScreen.pageKey: (context) => const ProfileScreen(),
           ForumScreen.pageKey: (context) => const ForumScreen(),
-         AdminDashBoard.pageKey:(context) => AdminDashBoard(),
-          SingleBookFullViewScreen.pageKey:(context) => SingleBookFullViewScreen(),
+          AdminDashBoard.pageKey: (context) => const AdminDashBoard(),
+          SingleBookFullViewScreen.pageKey: (context) =>
+              const SingleBookFullViewScreen(),
+          CartScreen.pageKey: (context) => const CartScreen(),
+          OrderScreen.pageKey: (context) => const OrderScreen(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

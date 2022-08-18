@@ -42,13 +42,17 @@ dependencies:
   convex_bottom_bar: ^3.0.0
   flutter_staggered_grid_view: ^0.6.2
   image_picker: ^0.8.5+3
+  flutter_rating_bar: ^4.0.1
   #FireBase plugins
   firebase_core: ^1.20.0
   firebase_auth: ^3.6.2
   cloud_firestore: ^3.4.3
   firebase_storage: ^10.3.4
-
-
+  #Other
+  fluttertoast: ^8.0.9
+  intl: ^0.17.0
+  whatsapp_unilink: ^2.0.2
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

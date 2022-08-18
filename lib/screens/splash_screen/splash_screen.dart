@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/controllers/user_auth_controller.dart';
-import 'package:online_book_store_app/provider/book_provider.dart';
-import 'package:online_book_store_app/screens/home_screens/product_view_screen.dart';
-import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:online_book_store_app/screens/home/product_view_screen.dart';
+import 'package:online_book_store_app/screens/login/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -45,9 +43,10 @@ class _SplashScreenState extends State<SplashScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             FadeInDown(
-                duration: const Duration(milliseconds: 3000),
-                child: const Icon(Icons.book,
-                    size: 150, color: ConstantValues.primaryColor)),
+              duration: const Duration(milliseconds: 3000),
+              child: const Icon(Icons.book,
+                  size: 150, color: ConstantValues.primaryColor),
+            ),
             FadeInUp(
               duration: const Duration(milliseconds: 3000),
               child: Text(

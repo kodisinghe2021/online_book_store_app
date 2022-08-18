@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +14,7 @@ class Heading01 extends StatelessWidget {
     return Text(
       text,
       style: GoogleFonts.mouseMemoirs(
+        letterSpacing: 3.0,
         fontSize: fontSize,
         color: Colors.white,
       ),

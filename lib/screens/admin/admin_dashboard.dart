@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/controllers/book_controller.dart';
-import 'package:online_book_store_app/provider/book_provider.dart';
+import 'package:online_book_store_app/provider/book.dart';
 import 'package:online_book_store_app/utils/util_functions.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
 import 'package:online_book_store_app/widget/custom_text_field.dart';
-import 'package:online_book_store_app/widget/enums.dart';
+import 'package:online_book_store_app/enums.dart';
 import 'package:online_book_store_app/widget/headings.dart';
 import 'package:provider/provider.dart';
 

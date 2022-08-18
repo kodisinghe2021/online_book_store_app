@@ -3,7 +3,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:online_book_store_app/screens/login_screen/login_screen.dart';
+import 'package:online_book_store_app/screens/login/login_screen.dart';
 import 'package:online_book_store_app/utils/alert_support.dart';
 
 class UtilFunctions {
