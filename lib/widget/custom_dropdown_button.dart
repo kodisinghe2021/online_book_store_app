@@ -24,7 +24,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           size: 30,
           color: Colors.white,
         ),
-        customItemsIndexes: const [4],
+        customItemsIndexes: const [3],
         customItemsHeight: 12,
         items: [
           ...MenuItems.firstItems.map(
@@ -54,7 +54,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         },
         itemHeight: 48,
         itemPadding: const EdgeInsets.only(left: 16, right: 16),
-        dropdownWidth: 170,
+        dropdownWidth: 180,
         dropdownPadding: const EdgeInsets.symmetric(vertical: 6),
         dropdownDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),

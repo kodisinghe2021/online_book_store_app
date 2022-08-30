@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/screens/cart/cart_screen.dart';
 import 'package:online_book_store_app/screens/home/product_view_screen.dart';
-import 'package:online_book_store_app/screens/oreders/order_screen.dart';
+import 'package:online_book_store_app/screens/orders/order_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -32,7 +32,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.card_travel),
             title: const Text('My Orders'),
             onTap: () {
-              Navigator.pushReplacementNamed(context, OrderScreen.pageKey);
+           //   Navigator.pushReplacementNamed(context, OrderScreen.pageKey);
             },
           ),
           const Divider(),

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/provider/cart.dart';
-import 'package:online_book_store_app/provider/orders.dart';
-import 'package:online_book_store_app/screens/oreders/order_screen.dart';
+import 'package:online_book_store_app/screens/orders/order_confirm_screen.dart';
 import 'package:online_book_store_app/widget/app_drawer.dart';
 import 'package:online_book_store_app/widget/black_floating_button.dart';
 import 'package:online_book_store_app/widget/custom_appbar.dart';
@@ -19,6 +18,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+//############################################################################//
   bool visible(context) {
     bool isVisibility = false;
     if (Provider.of<CartItemProvider>(context).itemCount > 0) {
@@ -27,10 +27,13 @@ class _CartScreenState extends State<CartScreen> {
     return isVisibility;
   }
 
+//############################################################################//
   @override
   Widget build(BuildContext context) {
+    //############################################################################//
     final screenSize = MediaQuery.of(context).size;
     final cart = Provider.of<CartItemProvider>(context);
+    //############################################################################//
     return SafeArea(
       child: Scaffold(
         floatingActionButton: const BackFloatingButton(),
@@ -54,6 +57,7 @@ class _CartScreenState extends State<CartScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+//############################################################################//
                         Card(
                           margin: const EdgeInsets.fromLTRB(20, 0, 0, 10),
                           child: Padding(
@@ -66,24 +70,20 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                           ),
                         ),
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~add Order Button ~~~~~~~~~~~~~~~~~~~~~~~//
+//############################################################################//
                         SizedBox(
                           width: 100,
                           height: 50,
                           child: ElevatedButton(
                             onPressed: () {
-                              Provider.of<OrderItemProvider>(context,
-                                      listen: false)
-                                  .addOrder(
-                                cart.cartItemMap.values.toList(),
-                                cart.calculateTotal,
-                              );
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+                              Navigator.pushNamed(
+                                  context, OrdersConfirmScreen.pageKey);
                               cart.clearMap();
-                              Navigator.pushNamed(context, OrderScreen.pageKey);
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: ConstantValues
-                                  .secondryColor, //ConstantValues.primaryColor,
+                              primary: ConstantValues.secondryColor,
                               animationDuration:
                                   const Duration(milliseconds: 3000),
                               elevation: 10,
@@ -99,6 +99,7 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                           ),
                         ),
+//############################################################################//
                       ],
                     ),
                   ),

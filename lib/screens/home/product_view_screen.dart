@@ -15,12 +15,9 @@ class ProductViewScreen extends StatefulWidget {
 
 class _ProductViewScreenState extends State<ProductViewScreen>
     with SingleTickerProviderStateMixin {
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-//                 Tab Controller object without initialize             //
+//############################################################################//
   late TabController _controller;
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-//                      set the TabController                         //
+//############################################################################//
   @override
   void initState() {
     super.initState();
@@ -29,19 +26,16 @@ class _ProductViewScreenState extends State<ProductViewScreen>
       setState(() {});
     });
   }
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-//                      Clear the tab controller                         //
+//############################################################################//
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
+//############################################################################//
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         appBar: const CustomAppBar(text: 'Products'),

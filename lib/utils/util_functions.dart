@@ -19,13 +19,13 @@ class UtilFunctions {
 //Validate data from frontend
 
   // check fields are empty or not
-  Future <void> validateAndSigninStoreUser(
+  Future<void> validateAndSigninStoreUser(
     BuildContext context,
     String name,
     String mobile,
     String email,
     String password,
-  ) async{
+  ) async {
     if (email == "" && password == "" && name == "" && mobile == "") {
       AlertSupprt.showDialogBox(
         context,
@@ -110,7 +110,7 @@ class UtilFunctions {
       } else {
         Logger().w(
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ REGISTRATION SUCCESS ~~~~~~~~~~~~~~~~~");
-         _signinUser(context, name, mobile, email, password);
+        _signinUser(context, name, mobile, email, password);
       }
     }
   }

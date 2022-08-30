@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/provider/book_modal.dart';
-import 'package:online_book_store_app/provider/book.dart';
+import 'package:online_book_store_app/provider/book_provider.dart';
 import 'package:online_book_store_app/screens/book_view/book_item_template.dart';
 import 'package:provider/provider.dart';
 

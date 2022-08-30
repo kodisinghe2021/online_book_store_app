@@ -63,26 +63,4 @@ class BookController {
       return null;
     }
   }
-
-  // //fetch grade one data
-  // Future<List<BookModal>> getGradeOneBookList() async {
-  //   List<BookModal> bookList = [];
-  //   try {
-  //     //QuerySnapshot snapshot
-  //     QuerySnapshot snapshot = await bookCollectionReference.get();
-  //     Logger().w('In snapsoht : $snapshot');
-  //     for (var element in snapshot.docs) {
-  //       Logger().w('inside of the loop : $element');
-  //       BookModal book = BookModal.fromJason(element as Map<String, dynamic>);
-  //       bookList.add(book);
-  //       Logger().w('Round $element  //// ');
-  //     }
-
-  //     Logger().i("length of files: ${snapshot.docs[0].data()}");
-  //     return bookList;
-  //   } on FirebaseException catch (e) {
-  //     Logger().e('In error log: ${e.code}');
-  //     return [];
-  //   }
-  // }
 }

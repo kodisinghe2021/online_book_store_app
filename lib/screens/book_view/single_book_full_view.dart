@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_book_store_app/constant.dart';
-import 'package:online_book_store_app/provider/book.dart';
+import 'package:online_book_store_app/provider/book_provider.dart';
 import 'package:online_book_store_app/widget/black_floating_button.dart';
 import 'package:online_book_store_app/widget/custom_appbar.dart';
 import 'package:provider/provider.dart';

@@ -11,6 +11,8 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     this.isObsecure = false,
     this.suffixIcon,
+    this.helperText,
+    this.hintText,
   }) : super(key: key);
 
   final Size screenSize;
@@ -18,6 +20,8 @@ class CustomTextField extends StatelessWidget {
   final Icon prefixIcon;
   final IconButton? suffixIcon;
   final TextEditingController controller;
+  final String? helperText;
+  final String? hintText;
   bool isObsecure;
   @override
   Widget build(BuildContext context) {
@@ -27,6 +31,8 @@ class CustomTextField extends StatelessWidget {
         obscureText: isObsecure,
         controller: controller,
         decoration: InputDecoration(
+          hintText: hintText,
+          helperText: helperText,
           filled: true,
           fillColor: Colors.white,
           prefixIcon: prefixIcon,

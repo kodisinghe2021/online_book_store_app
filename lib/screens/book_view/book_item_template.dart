@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/provider/book_modal.dart';
-import 'package:online_book_store_app/provider/book.dart';
+import 'package:online_book_store_app/provider/book_provider.dart';
 import 'package:online_book_store_app/provider/cart.dart';
 import 'package:online_book_store_app/screens/book_view/single_book_full_view.dart';
 import 'package:online_book_store_app/widget/favorite_toggle_icon.dart';
@@ -12,15 +12,15 @@ class BookItemTemplate extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final TextEditingController _inputController = TextEditingController();
-  // int _itemCount = 0;
+
   @override
   Widget build(BuildContext context) {
+//############################################################################//
     final book = Provider.of<BookModal>(context);
     final cart = Provider.of<CartItemProvider>(context);
-    //  bool isInvalidItemCount = false;
+//############################################################################//
     return Stack(
       children: [
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Book Image ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         Align(
           alignment: Alignment.topCenter,
           child: ClipRRect(
@@ -38,9 +38,7 @@ class BookItemTemplate extends StatelessWidget {
             ),
           ),
         ),
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Book Name~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//############################################################################//
         Container(
           decoration: BoxDecoration(
             color: ConstantValues.primaryColor.withOpacity(0.8),
@@ -56,10 +54,7 @@ class BookItemTemplate extends StatelessWidget {
             style: const TextStyle(color: Colors.white),
           ),
         ),
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Favorite Toggle Button~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
+//############################################################################//
         Positioned(
           bottom: 0,
           right: 0,
@@ -120,46 +115,8 @@ class BookItemTemplate extends StatelessWidget {
             ),
           ),
         ),
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//############################################################################//
       ],
     );
   }
-
-  // Future<bool?> toast() async {
-  //   return Fluttertoast.showToast(
-  //       msg: "This is Center Short Toast",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.CENTER,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.red,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0);
-  // }
-  // void showInputBox() => showDialog(
-  //       context: context,
-  //       builder: (context) => AlertDialog(
-  //         title: const Text('අවශ්‍ය පොත් ප්‍රමාණය ඇතුල් කරන්න'),
-  //         content: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             const SizedBox(height: 20),
-  //             TextField(
-  //               keyboardType: TextInputType.number,
-  //               controller: _inputController,
-  //             ),
-  //           ],
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               _itemCount = int.parse(_inputController.text);
-  //               Logger().w('Added Quantity in alert box:  $_itemCount');
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('OK'),
-  //           ),
-  //         ],
-  //       ),
-  //     );
 }

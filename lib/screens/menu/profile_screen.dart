@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:online_book_store_app/widget/custom_appbar.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -13,6 +14,16 @@ class ProfileScreen extends StatelessWidget {
         width: screenSize.width,
         height: screenSize.height,
         color: Colors.greenAccent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Under Maintain',
+              style: GoogleFonts.alef(fontSize: 40),
+            ),
+          ],
+        ),
       ),
     );
   }

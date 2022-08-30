@@ -1,15 +1,16 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:online_book_store_app/controllers/user_auth_controller.dart';
-import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:online_book_store_app/controllers/validations.dart';
+import 'package:online_book_store_app/provider/user_auth_controller.dart';
 import 'package:online_book_store_app/screens/home/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login/registration_page.dart';
-import 'package:online_book_store_app/utils/alert_support.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
 import 'package:online_book_store_app/widget/custom_text_field.dart';
 import 'package:online_book_store_app/widget/design_parts.dart';
 import 'package:online_book_store_app/widget/headings.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,16 +20,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailLogin = TextEditingController();
-  final TextEditingController _passwordLogin = TextEditingController();
-
-  bool _pwVisibility = false;
+//############################################################################//
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+//############################################################################//
+  final ValidationHelper _validations = ValidationHelper();
+  //###########################################################################//
+  bool _pwVisibility = true;
   bool _isLoading = false;
-
+//############################################################################//
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final UserAuthController userAuthController = UserAuthController();
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -78,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   left: (screenSize.width - screenSize.width * 0.8) * 0.5,
                   child: CustomTextField(
                     screenSize: screenSize,
-                    controller: _emailLogin,
+                    controller: _email,
                     label: 'Email',
                     prefixIcon: const Icon(Icons.email_outlined),
                   ),
@@ -91,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: CustomTextField(
                     isObsecure: _pwVisibility,
                     screenSize: screenSize,
-                    controller: _passwordLogin,
+                    controller: _password,
                     label: 'Password',
                     prefixIcon: const Icon(Icons.security_sharp),
                     suffixIcon: IconButton(
@@ -100,14 +103,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           _pwVisibility = !_pwVisibility;
                         });
                       },
-                      icon: !_pwVisibility
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
+                      icon: _pwVisibility
+                          ? const Icon(Icons.visibility_off)
+                          : const Icon(Icons.visibility),
                     ),
                   ),
                 ),
 
-                //Login button
+//############################################################################//
                 Positioned(
                   bottom: screenSize.height * 0.34,
                   left: (screenSize.width - screenSize.width * 0.69) * 0.5,
@@ -119,38 +122,34 @@ class _LoginScreenState extends State<LoginScreen> {
                         : CustomElevatedButton(
                             text: 'Login',
                             onTap: () async {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              if (_emailLogin.text.isNotEmpty &&
-                                  _passwordLogin.text.isNotEmpty) {
-                                bool loginSuccess =
-                                    await userAuthController.loginUser(
-                                  context,
-                                  _emailLogin.text,
-                                  _passwordLogin.text,
-                                );
+                              if (emptyChecker()) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await Provider.of<UserAuthController>(context,
+                                        listen: false)
+                                    .loginUser(
+                                        context, _email.text, _password.text);
                                 setState(() {
                                   _isLoading = false;
                                 });
-                                if (loginSuccess) {
-                                  Navigator.popAndPushNamed(
-                                      context, ProductViewScreen.pageKey);
-                                }
+                                // if (userData.user != null) {
+                                //   Navigator.pushReplacementNamed(
+                                //       context, ProductViewScreen.pageKey);
+                                // }
                               } else {
-                                AlertSupprt.showDialogBox(
-                                    context,
-                                    CoolAlertType.warning,
-                                    'Empty Fields',
-                                    'Fields Cannot be empty', () {
-                                  Navigator.pop(context);
-                                });
+                                CoolAlert.show(
+                                  context: context,
+                                  type: CoolAlertType.warning,
+                                  title: 'හිස්වූ පෙළ ක්ෂේත්ර ඇත',
+                                  text: 'සියලුම පෙළ ක්ෂේත්ර පිරවිය යුතුය',
+                                );
                               }
                             },
                           ),
                   ),
                 ),
-
+//############################################################################//
                 //link to registration page
                 Positioned(
                   bottom: screenSize.height * 0.23,
@@ -162,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                 ),
-
+//############################################################################//
                 //link to reset password
                 Positioned(
                   bottom: screenSize.height * 0.17,
@@ -172,28 +171,45 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {},
                   ),
                 ),
-                TextButton(
-                  onPressed: () async {
-                    if (_emailLogin.text == "fxkodisinghe@gmail.com") {
-                      bool isSuccess = await UserAuthController().loginUser(
-                          context, _emailLogin.text, _passwordLogin.text);
-                      if (isSuccess) {
-                        Navigator.pushNamed(context, AdminDashBoard.pageKey);
-                      }
-                    }
-                    {}
-                  },
-                  child: Text(
-                    'NKSoftTech',
-                    style: TextStyle(
-                        fontSize: 15, color: Colors.black.withOpacity(0.5)),
+
+//############################################################################//
+                Positioned(
+                  left: 20,
+                  bottom: 90,
+                  child: Row(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, ProductViewScreen.pageKey);
+                        },
+                        child: Text(
+                          'Continue as a guest',
+                          style: GoogleFonts.acme(
+                              fontSize: 20, color: Colors.amber),
+                        ),
+                      ),
+                      const Icon(Icons.arrow_circle_right_sharp)
+                    ],
                   ),
                 ),
+//############################################################################//
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void navigateToMainPage(BuildContext context) =>
+      Navigator.pushReplacementNamed(context, ProductViewScreen.pageKey);
+
+  bool emptyChecker() {
+    bool isValid = false;
+    if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
+      isValid = true;
+    }
+    return isValid;
   }
 }
