@@ -1,7 +1,9 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_book_store_app/provider/order_provider.dart';
 import 'package:online_book_store_app/screens/home/product_view_screen.dart';
+import 'package:provider/provider.dart';
 
 class BankDiposit extends StatelessWidget {
   const BankDiposit({Key? key}) : super(key: key);
@@ -52,14 +54,17 @@ class BankDiposit extends StatelessWidget {
                 const SizedBox(height: 25),
                 ElevatedButton(
                   onPressed: () async {
+                    await Provider.of<OrderProvider>(context, listen: false)
+                        .saveOrderDetailsInFirebase();
                     CoolAlert.show(
-                      context: context,
-                      type: CoolAlertType.confirm,
-                      title: 'Your Oder confirmed',
-                      text: 'ඔබගේ ඇනවුම යොමු කර ඇත.',
-                      onConfirmBtnTap: () => Navigator.pushReplacementNamed(
-                          context, ProductViewScreen.pageKey),
-                    );
+                        context: context,
+                        type: CoolAlertType.confirm,
+                        title: 'Your Oder confirmed',
+                        text: 'ඔබගේ ඇනවුම යොමු කර ඇත.',
+                        onConfirmBtnTap: () async {
+                          Navigator.pushReplacementNamed(
+                              context, ProductViewScreen.pageKey);
+                        });
                     // Provider.of<OrderProvider>(context, listen: false)
                     //     .saveOrderDetailsInFirebase();
                   },

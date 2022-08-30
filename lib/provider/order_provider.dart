@@ -17,13 +17,11 @@ class OrderProvider with ChangeNotifier {
     _bookList = bookList;
     Logger().w('Book List add to OrderProvider : ${_bookList.length}');
   }
-
 //############################################################################//
   void setOrderDetails(Map<String, dynamic> orderDetails) {
     _orderDetails = orderDetails;
     Logger().w('Order Detailst add to OrderProvider : ${_orderDetails.length}');
   }
-
 //############################################################################//
   Future<void> _saveOrderBookListInFirebase() async {
     Logger().w(_bookList.length);
@@ -41,5 +39,23 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
+//############################################################################//
+  Future<void> saveOrderDetailsInFirebase() async {
+    Logger().w(_orderDetails.length);
+    try {
+      await _saveOrderBookListInFirebase();
+      _orderDetails.putIfAbsent('idOfBookList', () => docIdOfBookList);
+    String docIdOfBookDetails = _firestore.collection('order-details').doc().id;
+      await _firestore
+          .collection('order-details')
+          .doc(docIdOfBookDetails)
+          .set(_orderDetails);
+      Logger().w('List length : ${_bookList.length}');
+      Logger().w('List saved');
+    } on FirebaseException catch (e) {
+      Logger().e(e.code);
+    }
+    notifyListeners();
+  }
 //############################################################################//
 }
