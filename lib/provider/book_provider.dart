@@ -39,11 +39,13 @@ class BooksProvider with ChangeNotifier {
           publisher: bookMap['publisher'],
           rank: bookMap['rank'],
         ));
+        Logger().w('The list return ${bookMap['grade']} :: ${bookList.length}');
       }
       notifyListeners();
       return bookList;
     } on FirebaseException catch (e) {
       Logger().e(e.code);
+      Logger().e('Error : ${e.code}');
       notifyListeners();
       return [];
     }

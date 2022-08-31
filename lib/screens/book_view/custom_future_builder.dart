@@ -16,6 +16,8 @@ class CustomFutureBuilder extends StatelessWidget {
       future: Provider.of<BooksProvider>(context, listen: false)
           .retrieveBookData(gradeEnum),
       builder: (BuildContext context, AsyncSnapshot<List<BookModal>> snapshot) {
+        // Logger()
+        //     .w('Snapshot data in $gradeEnum : -->${snapshot.data!.length} ');
         if (snapshot.hasData) {
           List<BookModal>? books = snapshot.data;
           return GridView.builder(
