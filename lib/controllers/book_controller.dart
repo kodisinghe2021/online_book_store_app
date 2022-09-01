@@ -1,66 +1,68 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 
 class BookController {
+  //############################################################################//
+  final FirebaseFirestore _bookRef = FirebaseFirestore.instance;
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+//############################################################################//
+//Task (3) ###################################################################//
+  Future<String> _uploadImageFile(String grade, File file) async {
+    Logger().i('In image uploading screen $grade --> ${file.path.toString()}');
 
+    String downloadUrl = '';
+    try {
+      if (file.path.isNotEmpty) {
+        final fileName = basename(file.path);
+        final destination = '$grade/$fileName';
+        final firebaseReference = _firebaseStorage.ref(destination);
+//----------------------------------------------------------------------------//
+        TaskSnapshot task = await firebaseReference.putFile(file);
+//----------------------------------------------------------------------------//
+        downloadUrl = await getDownloadUrl(task);
+      }
+      Logger().i('Successfully uploaded. :: download url :  $downloadUrl');
+    } catch (e) {
+      Logger().e(e);
+      return '';
+    }
+    return downloadUrl;
+  }
 
-  Future<void> startSaveBookInfo(
+//Task (4) ###################################################################//
+  Future<String> getDownloadUrl(TaskSnapshot task) async =>
+      await task.ref.getDownloadURL();
+//Task (2) ###################################################################//
+  Future<void> uploadBookData(
     String bookname,
-    File bookImage,
     String bookDescription,
     String price,
     String catogory,
     String publisher,
+    String writer,
     String grade,
+    File image,
   ) async {
-// create firebase instance for current grade
-     CollectionReference bookCollectionReference =
-      FirebaseFirestore.instance.collection(grade);
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Upload Image to Fire Storage~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-    TaskSnapshot? task =
-        await uploadFile(bookImage,grade)!.whenComplete(() => Logger().i('Complete'));
+    String imageUrl = await _uploadImageFile(grade, image);
+    Logger().i('inside upload book data:: Download url : $imageUrl');
+    String docID = _bookRef.collection(grade).doc().id;
 
-//~~~~~~~~~~~~~~~~~~~ Download URL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-    final imageDownloadUrl = await task.ref.getDownloadURL();
-
-//~~~~~~~~~~~~~ in here we can genarate uniqu id for single doc ~~~~~~~~~~~~~~~~~~~~//
-    String docId = bookCollectionReference.doc().id;
-
-    bookCollectionReference.doc(docId).set({
-      'bookid': docId,
+    await _bookRef.collection(grade).doc(docID).set({
+      'bookid': docID,
       'bookname': bookname,
-      'bookImageUrl': imageDownloadUrl,
+      'bookImageUrl': imageUrl,
       'bookDescription': bookDescription,
       'price': price,
-      'favouriteScore': '0',
       'rank': '0',
       'catogory': catogory,
       'publisher': publisher,
+      'writer': writer,
       'grade': grade,
-    }).then((value) => Logger().i('Succesfuly upload book data'));
+    }).then((value) {});
   }
-
-//~~~~~~~~~~~~~~~~~~~~~~ Upload Image ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-  UploadTask? uploadFile(File img,String gradePath) {
-    Logger().i('inside uploadFile(File img) { $img');
-    try {
-      final fileName = basename(img.path);
-      Logger().i('file name $fileName');
-
-      final destination = '$gradePath/$fileName';
-      Logger().i('destination $destination');
-
-      final ref = FirebaseStorage.instance.ref(destination);
-      Logger().i('ref $ref');
-
-      Logger().i('ref.putFile(img); executed with $img');
-      return ref.putFile(img);
-    } catch (e) {
-      Logger().e('Error: $e');
-      return null;
-    }
-  }
+//#######################################################################//
 }

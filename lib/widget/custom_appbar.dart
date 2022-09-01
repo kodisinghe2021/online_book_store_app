@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/provider/cart.dart';
+import 'package:online_book_store_app/provider/user_auth_controller.dart';
+import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
 import 'package:online_book_store_app/widget/cart_icon.dart';
 import 'package:online_book_store_app/widget/custom_dropdown_button.dart';
 import 'package:online_book_store_app/widget/headings.dart';
@@ -12,14 +14,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.text = '',
     this.fontSize = 25,
   }) : super(key: key);
+//############################################################################//
   final String text;
   final double fontSize;
-
+//############################################################################//
   @override
   Size get preferredSize => const Size.fromHeight(55);
+//############################################################################//
 
+//############################################################################//
   @override
   Widget build(BuildContext context) {
+    final isAdmin = Provider.of<UserAuthController>(context).checkAdministrator;
     return AppBar(
       elevation: 5,
       backgroundColor: ConstantValues.primaryColor,
@@ -32,11 +38,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Heading01(text: text, fontSize: fontSize),
       ),
       actions: [
-        Consumer<CartItemProvider>(
-          builder: (context, value, child) {
-            return CartIcon(value: value.totalBooks.toString());
-          },
-        )
+        isAdmin
+            ? IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AdminDashBoard.pageKey);
+                },
+                icon: const Icon(Icons.dashboard),
+              )
+            : Consumer<CartItemProvider>(
+                builder: (context, value, child) {
+                  return CartIcon(value: value.totalBooks.toString());
+                },
+              ),
+
         // CartIcon(),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:online_book_store_app/provider/book_provider.dart';
 import 'package:online_book_store_app/provider/cart.dart';
 import 'package:online_book_store_app/provider/order_provider.dart';
 import 'package:online_book_store_app/provider/user_auth_controller.dart';
+import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
 import 'package:online_book_store_app/screens/book_view/single_book_full_view.dart';
 import 'package:online_book_store_app/screens/cart/cart_screen.dart';
 import 'package:online_book_store_app/screens/home/product_view_screen.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
       // providers:[ChangeNotifierProvider( (context) => UserProvider()),],
       child: MaterialApp(
         routes: {
+          AdminDashBoard.pageKey: (context) => const AdminDashBoard(),
           LoginScreen.pageKey: (context) => const LoginScreen(),
           RegistrationScreen.pageKey: (context) => const RegistrationScreen(),
           ProductViewScreen.pageKey: (context) => const ProductViewScreen(),

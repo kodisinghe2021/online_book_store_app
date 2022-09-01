@@ -21,6 +21,9 @@ class UserAuthController with ChangeNotifier {
 //############################################################################//
   UserModal? get getUserData => _currentUserDetails;
 //############################################################################//
+  bool _isAdminUser = false;
+  bool get checkAdministrator => _isAdminUser;
+//############################################################################//
   Future<void> _createCurrentUserModal(String userId) async {
     try {
       CollectionReference collectionReference = _firestore.collection('users');
@@ -183,6 +186,9 @@ class UserAuthController with ChangeNotifier {
     late UserCredential userCredential;
     try {
       await _mAuth.signInWithEmailAndPassword(email: email, password: password);
+      if (email == 'fxkodisinghe@gmail.com') {
+        _isAdminUser = true;
+      }
       userStatus(context);
       // if (userCredential.user != null) {
       //   _createCurrentUserModal(userCredential.user!.uid);

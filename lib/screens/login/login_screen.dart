@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_book_store_app/controllers/validations.dart';
 import 'package:online_book_store_app/provider/user_auth_controller.dart';
+import 'package:online_book_store_app/screens/admin/admin_dashboard.dart';
 import 'package:online_book_store_app/screens/home/product_view_screen.dart';
 import 'package:online_book_store_app/screens/login/registration_page.dart';
 import 'package:online_book_store_app/widget/custom_buttons.dart';
@@ -194,6 +195,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 //############################################################################//
+//############################################################################//
+                Positioned(
+                  left: 50,
+                  bottom: 50,
+                  child: Row(
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, AdminDashBoard.pageKey);
+                        },
+                        child: Text(
+                          'Admin Login',
+                          style: GoogleFonts.acme(
+                              fontSize: 20, color: Colors.amber),
+                        ),
+                      ),
+                      const Icon(Icons.arrow_circle_right_sharp)
+                    ],
+                  ),
+                ),
+//############################################################################//
               ],
             ),
           ),
@@ -202,8 +224,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void navigateToMainPage(BuildContext context) =>
-      Navigator.pushReplacementNamed(context, ProductViewScreen.pageKey);
+  // void navigateToMainPage(BuildContext context) =>
+  //     Navigator.pushReplacementNamed(context, ProductViewScreen.pageKey);
 
   bool emptyChecker() {
     bool isValid = false;
