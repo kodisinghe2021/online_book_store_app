@@ -17,7 +17,7 @@ class OrderModal {
 
   String nic;
 
-  Map<String,dynamic> bookListMap;
+  List<Map<String, dynamic>> fullDetailsOfBookwithQnt;
 
   OrderModal({
     required this.orderDetailsId,
@@ -28,6 +28,7 @@ class OrderModal {
     required this.idOfBookList,
     required this.name,
     required this.nic,
-    required this.bookListMap,
+    required this.fullDetailsOfBookwithQnt,
+    // required this.bookListMap,
   });
 }

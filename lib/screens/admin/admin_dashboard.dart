@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:online_book_store_app/screens/admin/admin_screen_tab_pages/order_review_screen.dart';
-import 'package:online_book_store_app/screens/admin/admin_screen_tab_pages/update_screen.dart';
 import 'package:online_book_store_app/screens/admin/admin_screen_tab_pages/upload_screen.dart';
 
 class AdminDashBoard extends StatefulWidget {
@@ -10,28 +9,31 @@ class AdminDashBoard extends StatefulWidget {
   State<AdminDashBoard> createState() => _AdminDashBoardState();
 }
 
-class _AdminDashBoardState extends State<AdminDashBoard> with SingleTickerProviderStateMixin{
+class _AdminDashBoardState extends State<AdminDashBoard>
+    with SingleTickerProviderStateMixin {
 //############################################################################//
   late TabController _tabController;
 //############################################################################//
-   @override
+  @override
   void initState() {
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
     _tabController.addListener(() {
       setState(() {});
     });
   }
+
 //############################################################################//
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  } 
+  }
+
 //############################################################################//
   List<String> pageTitles = [
     'Uploads',
-    'Updates',
+    // 'Updates',
     'Orders',
   ];
 //############################################################################//
@@ -39,25 +41,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> with SingleTickerProvid
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          // actions: [
-          //   Row(
-          //     children: [
-          //       const SizedBox(width: 10),
-          //       IconButton(
-          //         onPressed: () {
-          //            user.logOut(context);
-          //         },
-          //         icon: const Icon(
-          //           Icons.logout,
-          //           color: Colors.white,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ],
           centerTitle: true,
           title: Text(pageTitles[_tabController.index]),
           bottom: TabBar(
@@ -68,12 +54,12 @@ class _AdminDashBoardState extends State<AdminDashBoard> with SingleTickerProvid
                 text: pageTitles[0],
                 icon: const Icon(Icons.upload_file),
               ),
+              // Tab(
+              //   text: pageTitles[1],
+              //   icon: const Icon(Icons.upgrade),
+              // ),
               Tab(
                 text: pageTitles[1],
-                icon: const Icon(Icons.upgrade),
-              ),
-              Tab(
-                text: pageTitles[2],
                 icon: const Icon(Icons.shopping_cart_checkout),
               ),
             ],
@@ -83,7 +69,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> with SingleTickerProvid
           controller: _tabController,
           children: const [
             UploadScreen(),
-            UpadateScreen(),
+            // UpadateScreen(),
             OrderReviewScreen(),
           ],
         ),

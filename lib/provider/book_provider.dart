@@ -33,7 +33,7 @@ class BooksProvider with ChangeNotifier {
     try {
       List<BookModal> bookList = [];
       final collectionReference =
-          _firestore.collection('books').where('grade',isEqualTo: refPath);
+          _firestore.collection('books').where('grade', isEqualTo: refPath);
       QuerySnapshot snapshot = await collectionReference.get();
 
       for (var element in snapshot.docs) {
@@ -63,8 +63,8 @@ class BooksProvider with ChangeNotifier {
           ),
         );
       }
-      Logger().w(
-          'list of return  :: length ${bookList.length}  || single item:: ${bookList[0].bookid}');
+      // Logger().w(
+      //     'list of return  :: length ${bookList.length}  || single item:: ${bookList[0].bookid}');
 
       notifyListeners();
       return bookList;
@@ -193,8 +193,18 @@ class BooksProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-//############################################################################//
 
+//############################################################################//
+  Future<List<BookModal>> retreiveBookDataforOrders(String docId) async {
+    List<BookModal> listOfBooks = [];
+    try {
+      CollectionReference reference = await _firestore.collection('books');
+      reference.doc(docId).get();
+      return listOfBooks;
+    } catch (e) {
+      return listOfBooks;
+    }
+  }
   // Future<void> updateBook(BuildContext context, String docID, String grade,
   //     String price, String discription) async {
   //   try {

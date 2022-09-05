@@ -14,6 +14,8 @@ class OrderController {
 //############################################################################//
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 //############################################################################//
+  final List<Map<String, dynamic>> _orderedBookList = [];
+  //############################################################################//
   Future<void> addOrderData(
     BuildContext context,
     String name,
@@ -49,17 +51,22 @@ class OrderController {
     Provider.of<OrderProvider>(context, listen: false).setBookList(_bookList);
   }
 
-//############################################################################//
-
+//Task 01 #####################################################################//
   Future<List<OrderModal>> fetchOrderData() async {
-    Logger().i('Inside data fetching function');
+    // Logger().i('Inside data fetching function');
     List<OrderModal> orders = [];
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     CollectionReference collection = _firestore.collection('order-details');
     QuerySnapshot snapshot = await collection.get();
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     for (var ordersMap in snapshot.docs) {
-      Logger().i('DocID for book list: ${ordersMap['idOfBookList']}');
-      final Map<String, dynamic> bookMap =
-          await _fetchOrderedBook(ordersMap['idOfBookList']);
+      //   Logger().i('DocID for book list: ${ordersMap['idOfBookList']}');
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      await fetchOrderedBook(ordersMap['idOfBookList']);
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      Logger().w(
+          'This is the last checkup for List of book data :: Length : ${_orderedBookList.length}');
       orders.add(
         OrderModal(
           orderDetailsId: ordersMap['order-details-id'],
@@ -70,38 +77,60 @@ class OrderController {
           idOfBookList: ordersMap['idOfBookList'],
           name: ordersMap['name'],
           nic: ordersMap['nic'],
-          bookListMap: bookMap,
+          fullDetailsOfBookwithQnt: _orderedBookList,
         ),
       );
     }
-    Logger().i('The list has been created :: length of list: ${orders.length}');
+    //  Logger().i('The list has been created :: length of list: ${orders.length}');
     return orders;
   }
 
-  Future<Map<String, dynamic>> _fetchOrderedBook(String docID) async {
-    Logger().i('Inside data fetching _fetchOrderedBook(String docID) $docID');
+//Task 02 #####################################################################//
+  Future<void> fetchOrderedBook(String docID) async {
     try {
-//this book data map have { bookID : quantity }
-      Map<String, dynamic> bookMap = {};
       CollectionReference collection =
           _firestore.collection('ordered-book-list');
-      Logger().i('Collection created');
+
       final booksData = await collection.doc(docID).get();
       Map<String, dynamic> bookListFrom =
           booksData.data() as Map<String, dynamic>;
 
-      Logger().i('Ordered book list length :${bookListFrom.length}');
-      if (bookListFrom.isNotEmpty) {
-        bookMap = bookListFrom;
-      } else {
-        return bookMap = {};
-      }
-
-      Logger().i(
-          'The list has been created :: length of list: ${bookListFrom.length}');
-      return bookMap;
+      bookListFrom.forEach((key, value) async {
+        Map<String, dynamic> bookMap = await getBookDataforOrder(key, value);
+        //  Logger().i('Map:::${bookMap['bookname']} ');
+        _orderedBookList.add(bookMap);
+        Logger().i(
+            'Length of fullyBookDataWithquantity ::::: ${_orderedBookList.length}');
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        // fullyBookDataWithquantity.add(await getBookDataforOrder(key, value));
+        // fullyBookDataWithquantity.insert(
+        //     0, await getBookDataforOrder(key, value));
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        // Logger().w('$key : $value');
+      });
+      Logger().i('Length of book data list ${_orderedBookList.length}');
     } on FirebaseException catch (e) {
       Logger().e('Error: : ${e.code}');
+    }
+  }
+
+//Task 03 #####################################################################//
+  Future<Map<String, dynamic>> getBookDataforOrder(
+      String bookID, String quantity) async {
+    Map<String, dynamic> bookData = {};
+    try {
+      CollectionReference reference = _firestore.collection('books');
+      DocumentSnapshot snapshot = await reference.doc(bookID).get();
+      Map<String, dynamic> bookMap = snapshot.data() as Map<String, dynamic>;
+      bookData = bookMap;
+      bookData.putIfAbsent('quantity', () => quantity);
+      //  bookData.forEach((key, value) {
+      //  Logger().i('$key : $value');
+      //   });
+      // Logger().i('Length of book data from Task 03 ${bookData.length}');
+      return bookData;
+    } on FirebaseException catch (e) {
+      Logger().e('ERROR :: ${e.code}');
       return {};
     }
   }
