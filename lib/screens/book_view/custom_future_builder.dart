@@ -12,6 +12,7 @@ class CustomFutureBuilder extends StatelessWidget {
   String gradeEnum;
   @override
   Widget build(BuildContext context) {
+    Provider.of<BooksProvider>(context, listen: false).setGrade(gradeEnum);
     return FutureBuilder(
       future: Provider.of<BooksProvider>(context, listen: false)
           .retrieveBookData(gradeEnum),

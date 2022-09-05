@@ -13,34 +13,41 @@ class BooksProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final BookController _bookController = BookController();
   late BookModal _tappedBook;
+  String _grade = '';
 //############################################################################//
   void setBook(BookModal book) {
     _tappedBook = book;
   }
 
-//############################################################################//
   BookModal get getTappedbook => _tappedBook;
+//############################################################################//
+  void setGrade(String grade) {
+    _grade = grade;
+  }
+
+  String get getGrade => _grade;
 //############################################################################//
   Future<List<BookModal>> retrieveBookData(
     String refPath,
   ) async {
     try {
       List<BookModal> bookList = [];
-      CollectionReference collectionReference = _firestore.collection(refPath);
+      final collectionReference =
+          _firestore.collection('books').where('grade',isEqualTo: refPath);
       QuerySnapshot snapshot = await collectionReference.get();
 
       for (var element in snapshot.docs) {
-        Logger().i('bookid: ${element['bookid']}');
-        Logger().i('bookname: ${element['bookname']}');
-        Logger().i('price: ${element['price']}');
-        Logger().i('bookImageUrl: ${element['bookImageUrl']}');
-        Logger().i('bookDescription: ${element['bookDescription']}');
-        Logger().i('catogory: ${element['catogory']}');
+        // Logger().i('bookid: ${element['bookid']}');
+        // Logger().i('bookname: ${element['bookname']}');
+        // Logger().i('price: ${element['price']}');
+        // Logger().i('bookImageUrl: ${element['bookImageUrl']}');
+        // Logger().i('bookDescription: ${element['bookDescription']}');
+        // Logger().i('catogory: ${element['catogory']}');
         // Logger().i('favouriteScore: ${element['favouriteScore']}');
-        Logger().i('grade: ${element['grade']}');
-        Logger().i('publisher: ${element['publisher']}');
-        Logger().i('rank: ${element['rank']}');
-        Logger().i('Grade : $refPath :: Lenth of bookList: ${bookList.length}');
+        // Logger().i('grade: ${element['grade']}');
+        // Logger().i('publisher: ${element['publisher']}');
+        // Logger().i('rank: ${element['rank']}');
+        // Logger().i('Grade : $refPath :: Lenth of bookList: ${bookList.length}');
 
         bookList.add(
           BookModal(
@@ -55,11 +62,10 @@ class BooksProvider with ChangeNotifier {
             rank: element['rank'],
           ),
         );
-        Logger().i('book Modal added: :: ${bookList[0].bookid} ');
       }
       Logger().w(
           'list of return  :: length ${bookList.length}  || single item:: ${bookList[0].bookid}');
-      // }
+
       notifyListeners();
       return bookList;
     } on FirebaseException catch (e) {
@@ -127,8 +133,25 @@ class BooksProvider with ChangeNotifier {
     BuildContext context,
     String docID,
   ) async {
+    Logger().i('Inside deletion');
     try {
-      await _firestore.doc(docID).delete();
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      await _firestore
+          .collection(getTappedbook.grade)
+          .doc(docID)
+          .delete()
+          .then(
+            (value) => CoolAlert.show(
+                context: context,
+                type: CoolAlertType.success,
+                title: 'Success',
+                text: 'Successfuly Deleted',
+                onConfirmBtnTap: () async {
+                  Navigator.pop(context);
+                }),
+          )
+          .catchError((error) => Logger().i('Erro: $error'));
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     } on FirebaseException catch (e) {
       CoolAlert.show(
           context: context,
@@ -136,21 +159,31 @@ class BooksProvider with ChangeNotifier {
           title: 'Error Updating',
           text: e.code);
     }
+    notifyListeners();
   }
 
 //############################################################################//
-  Future<void> updateBook(BuildContext context, String docID, String priceIn,
-      String discriptionIn) async {
+  Future<void> updateBook(
+    BuildContext context,
+    String docID,
+    String priceIn,
+    String discriptionIn,
+  ) async {
     try {
       Logger().i("Inside update");
-      await _firestore.doc(docID).update({
+      await _firestore.collection(getTappedbook.grade).doc(docID).update({
         'price': priceIn,
         'bookDescription': discriptionIn,
-      }).then((value) => CoolAlert.show(
-          context: context,
-          type: CoolAlertType.success,
-          title: 'Success',
-          text: 'Successfuly updated'));
+      }).then(
+        (value) => CoolAlert.show(
+            context: context,
+            type: CoolAlertType.success,
+            title: 'Success',
+            text: 'Successfuly updated',
+            onConfirmBtnTap: () {
+              Navigator.pop(context);
+            }),
+      );
     } on FirebaseException catch (e) {
       CoolAlert.show(
           context: context,
@@ -158,6 +191,28 @@ class BooksProvider with ChangeNotifier {
           title: 'Error Updating',
           text: e.code);
     }
+    notifyListeners();
   }
 //############################################################################//
+
+  // Future<void> updateBook(BuildContext context, String docID, String grade,
+  //     String price, String discription) async {
+  //   try {
+  //     Logger().i("Inside update");
+  //     await _firestore.collection(grade).doc(docID).update({
+  //       'price': price,
+  //       'bookDescription': discription,
+  //     }).then((value) => CoolAlert.show(
+  //         context: context,
+  //         type: CoolAlertType.success,
+  //         title: 'Success',
+  //         text: 'Successfuly updated'));
+  //   } on FirebaseException catch (e) {
+  //     CoolAlert.show(
+  //         context: context,
+  //         type: CoolAlertType.error,
+  //         title: 'Error Updating',
+  //         text: e.code);
+  //   }
+  // }
 }

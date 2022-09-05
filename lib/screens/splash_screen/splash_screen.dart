@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/provider/user_auth_controller.dart';
+import 'package:online_book_store_app/screens/home/product_view_screen.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () async {
       await Provider.of<UserAuthController>(context, listen: false)
           .userStatus(context);
+     // Navigator.pushNamed(context, ProductViewScreen.pageKey);
     });
   }
 

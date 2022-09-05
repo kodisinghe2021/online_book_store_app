@@ -48,7 +48,14 @@ class UserAuthController with ChangeNotifier {
 // Task 01 User Status #################################################//
   Future<void> userStatus(BuildContext context) async {
     _mAuth.userChanges().listen((User? user) {
+      Logger().i('Not Admin');
       if (user != null) {
+        if (user.email == 'fxkodisinghe@gmail.com') {
+          Logger().i('This is admin');
+          _isAdminUser = true;
+        } else {
+          _isAdminUser = false;
+        }
         _createCurrentUserModal(user.uid);
         Navigator.pushNamed(context, ProductViewScreen.pageKey);
       } else {
@@ -186,13 +193,7 @@ class UserAuthController with ChangeNotifier {
     late UserCredential userCredential;
     try {
       await _mAuth.signInWithEmailAndPassword(email: email, password: password);
-      if (email == 'fxkodisinghe@gmail.com') {
-        _isAdminUser = true;
-      }
       userStatus(context);
-      // if (userCredential.user != null) {
-      //   _createCurrentUserModal(userCredential.user!.uid);
-      // }
     } on FirebaseAuthException catch (e) {
       if (e.code == "invalid-email") {
         CoolAlert.show(

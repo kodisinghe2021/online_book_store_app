@@ -51,7 +51,7 @@ class BookController {
     Logger().i('inside upload book data:: Download url : $imageUrl');
     String docID = _bookRef.collection(grade).doc().id;
 
-    await _bookRef.collection(grade).doc(docID).set({
+    await _bookRef.collection('books').doc(docID).set({
       'bookid': docID,
       'bookname': bookname,
       'bookImageUrl': imageUrl,

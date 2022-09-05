@@ -1,13 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/logger.dart';
 import 'package:online_book_store_app/constant.dart';
 import 'package:online_book_store_app/provider/book_provider.dart';
 import 'package:online_book_store_app/provider/cart.dart';
 import 'package:online_book_store_app/provider/user_auth_controller.dart';
 import 'package:online_book_store_app/screens/admin/admin_screen_tab_pages/upload_screen.dart';
+import 'package:online_book_store_app/screens/home/product_view_screen.dart';
 import 'package:online_book_store_app/widget/black_floating_button.dart';
 import 'package:online_book_store_app/widget/custom_appbar.dart';
 import 'package:provider/provider.dart';
@@ -22,25 +23,44 @@ class SingleBookFullViewScreen extends StatefulWidget {
 }
 
 class _SingleBookFullViewScreenState extends State<SingleBookFullViewScreen> {
-  double ratingScore = 1.0;
-  String initPrice = '';
-  String initDescription = '';
+//############################################################################//
+  double ratingScore = 4.0;
   bool _isExpand = false;
+  // String bookName = '';
+  // String imageUrl = '';
+  // String description = '';
+  // String price = '';
+  // String subject = '';
+  // String grade = '';
 //############################################################################//
   final TextEditingController _inputController = TextEditingController();
-  late TextEditingController _updatePrice; // = TextEditingController();
-  late TextEditingController _updateDiscription; // = TextEditingController();
-
+  final TextEditingController _updatePrice = TextEditingController();
+  final TextEditingController _updateDiscription = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 //############################################################################//
+
+  // void addBookDataToThis() {
+  //   final book =
+  //       Provider.of<BooksProvider>(context, listen: false).getTappedbook;
+  //   bookName = book.bookname;
+  //   imageUrl = book.bookImageUrl;
+  //   description = book.bookDescription;
+  //   price = book.price;
+  //   grade = book.grade;
+  // }
+
   @override
   Widget build(BuildContext context) {
 //############################################################################//
-    final book = Provider.of<BooksProvider>(context).getTappedbook;
+    final book =
+        Provider.of<BooksProvider>(context, listen: false).getTappedbook;
     final cart = Provider.of<CartItemProvider>(context);
-    final isAdmin = Provider.of<UserAuthController>(context).checkAdministrator;
+    final isAdmin = Provider.of<UserAuthController>(context, listen: false)
+        .checkAdministrator;
+    // final grade = Provider.of<BooksProvider>(context, listen: false).getGrade;
     final screenSize = MediaQuery.of(context).size;
-    _updateDiscription = TextEditingController(text: book.bookDescription);
-    _updatePrice = TextEditingController(text: book.price);
+    // _updateDiscription = TextEditingController(text: book.bookDescription);
+    // _updatePrice = TextEditingController(text: book.price);
 //############################################################################//
     return SafeArea(
       child: Scaffold(
@@ -68,10 +88,10 @@ class _SingleBookFullViewScreenState extends State<SingleBookFullViewScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       buildRating(),
+//######################################################################Update//
                       if (isAdmin)
                         IconButton(
                           onPressed: () {
-                            print('Clicked');
                             setState(() {
                               _isExpand = !_isExpand;
                             });
@@ -81,24 +101,31 @@ class _SingleBookFullViewScreenState extends State<SingleBookFullViewScreen> {
                             color: Colors.redAccent,
                           ),
                         ),
+//###################################################################   delete//
                       if (isAdmin)
                         IconButton(
-                          onPressed: () {
-                            CoolAlert.show(
-                                context: context,
-                                type: CoolAlertType.confirm,
-                                onConfirmBtnTap: () {
-                                  Logger().i('Clicked');
-                                });
-
-                            // Provider.of<BooksProvider>(context, listen: false)
-                            //     .deleteBook(context, book.bookid);
+                          onPressed: () async {
+                            await CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.confirm,
+                              title: 'Delete',
+                              text: 'Confirm for deletion',
+                              onConfirmBtnTap: () async {
+                                await Provider.of<BooksProvider>(context,
+                                        listen: false)
+                                    .deleteBook(context, book.bookid);
+                                Navigator.pop(context);
+                              },
+                            );
+                            Navigator.pushReplacementNamed(
+                                context, ProductViewScreen.pageKey);
                           },
                           icon: const Icon(
                             Icons.delete_forever,
                             color: Colors.red,
                           ),
                         ),
+//############################################################################//
                       IconButton(
                         onPressed: () {
                           showDialog(
@@ -160,7 +187,7 @@ class _SingleBookFullViewScreenState extends State<SingleBookFullViewScreen> {
                 ),
                 const Divider(),
                 // const SizedBox(height: 15),
-                //############################################################################//
+//############################################################################//
                 if (_isExpand)
                   SizedBox(
                     height: 250,
@@ -183,21 +210,25 @@ class _SingleBookFullViewScreenState extends State<SingleBookFullViewScreen> {
                           width: screenSize.width * 0.6,
                           height: 35,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Logger().i('clicked');
-                              // CoolAlert.show(
-                              //     context: context,
-                              //     type: CoolAlertType.confirm,
-                              //     onConfirmBtnTap: () {
-                              //       Logger().i('Clicked');
-                              //     });
-                              Provider.of<BooksProvider>(context, listen: false)
-                                  .updateBook(
-                                context,
-                                book.bookid,
-                                _updatePrice.text,
-                                _updateDiscription.text,
-                              );
+                            onPressed: () async {
+                              CoolAlert.show(
+                                  context: context,
+                                  type: CoolAlertType.confirm,
+                                  title: 'Update',
+                                  text: 'Confirm your Updates',
+                                  onConfirmBtnTap: () async {
+                                    await Provider.of<BooksProvider>(context,
+                                            listen: false)
+                                        .updateBook(
+                                      context,
+                                      book.bookid,
+                                      _updatePrice.text,
+                                      _updateDiscription.text,
+                                    );
+                                    Navigator.pop(context);
+                                  });
+                              Navigator.pushReplacementNamed(
+                                  context, ProductViewScreen.pageKey);
                             },
                             child: const Text(
                               'Update',
