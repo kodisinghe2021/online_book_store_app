@@ -77,6 +77,9 @@ class _CartScreenState extends State<CartScreen> {
                           child: ElevatedButton(
                             onPressed: () {
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+                              Provider.of<CartItemProvider>(context,
+                                      listen: false)
+                                  .setTotal(cart.calculateTotal.toString());
                               Navigator.pushNamed(
                                   context, OrdersConfirmScreen.pageKey);
                               cart.clearMap();

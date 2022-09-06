@@ -37,8 +37,6 @@ class UserAuthController with ChangeNotifier {
         contact01: userData['contact01'],
         contact02: userData['contact02'],
       );
-      Logger().i('Mapped');
-      Logger().w('User Modal added : ${getUserData!.name}');
     } on FirebaseException catch (e) {
       Logger().e(e.code);
     }
@@ -48,10 +46,8 @@ class UserAuthController with ChangeNotifier {
 // Task 01 User Status #################################################//
   Future<void> userStatus(BuildContext context) async {
     _mAuth.userChanges().listen((User? user) {
-      Logger().i('Not Admin');
       if (user != null) {
         if (user.email == 'fxkodisinghe@gmail.com') {
-          Logger().i('This is admin');
           _isAdminUser = true;
         } else {
           _isAdminUser = false;

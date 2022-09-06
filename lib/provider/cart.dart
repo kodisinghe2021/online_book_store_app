@@ -33,6 +33,15 @@ class CartItemProvider with ChangeNotifier {
 
     return count;
   }
+
+//############################################################################//
+  String _totalBill = '';
+
+  void setTotal(String total) {
+    _totalBill = total;
+  }
+
+  String get getTotalBill => _totalBill;
 //############################################################################//
   double get calculateTotal {
     double totalPrice = 0.0;
@@ -41,11 +50,12 @@ class CartItemProvider with ChangeNotifier {
     });
     return totalPrice;
   }
-//############################################################################//                                                 //
+
+//############################################################################//
   Map<String, CartItemModal> get cartItemMap => {..._itemsMap};
-//############################################################################//     
+//############################################################################//
   Map<String, CartItemModal> get getOrderedBookList => {..._orderedBookList};
-//############################################################################//     
+//############################################################################//
   void addToCart(String bookId, String title, String price, String quantity) {
     if (_itemsMap.containsKey(bookId)) {
       _itemsMap.update(
@@ -71,6 +81,7 @@ class CartItemProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
 //############################################################################//
   void clearMap() {
     _orderedBookList = _itemsMap;

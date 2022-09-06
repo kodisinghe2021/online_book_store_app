@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:online_book_store_app/enums.dart';
 import 'package:online_book_store_app/controllers/orders_controller.dart';
 import 'package:online_book_store_app/models/user_modal.dart';
+import 'package:online_book_store_app/provider/cart.dart';
 import 'package:online_book_store_app/provider/user_auth_controller.dart';
 import 'package:online_book_store_app/screens/orders/order_types/bank_deposit.dart';
 import 'package:online_book_store_app/screens/orders/order_types/online_payment.dart';
@@ -121,6 +122,11 @@ class _OrdersConfirmScreenState extends State<OrdersConfirmScreen> {
                             style: GoogleFonts.acme(fontSize: 20),
                           ),
                           onPressed: () async {
+                            String totalBill = Provider.of<CartItemProvider>(
+                                    context,
+                                    listen: false)
+                                .getTotalBill;
+                            Logger().i('Total Price : $totalBill');
                             setState(() {
                               _isOrderProccessing = true;
                             });
@@ -128,6 +134,7 @@ class _OrdersConfirmScreenState extends State<OrdersConfirmScreen> {
                             if (_userID.isEmpty) {
                               Logger().i(
                                   'inside of condition -->the user is empty');
+
                               await _order.addOrderData(
                                 context,
                                 _nameField.text,
@@ -135,6 +142,7 @@ class _OrdersConfirmScreenState extends State<OrdersConfirmScreen> {
                                 _deleveryAddressField.text,
                                 _contact_01Field.text,
                                 _contact_02Field.text,
+                                totalBill,
                               );
                               Logger()
                                   .i('${_nameField.text}, ${_nicField.text}');
@@ -148,6 +156,7 @@ class _OrdersConfirmScreenState extends State<OrdersConfirmScreen> {
                                 _address,
                                 _con1,
                                 _con2,
+                                totalBill,
                               );
                               Logger().i('$_name, $_nic');
                             }
